@@ -7,6 +7,6 @@ sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd6
 
 file=$(basename -- $(find src -name "*.xml") .xml)
 
-rm -rf dist && mkdir -p dist
+rm -rf out && mkdir -p out
 
-yq --input-format xml --output-format json ./src/$file.xml >> dist/$file.json
+yq --input-format xml --output-format json ./src/$file.xml >> out/$file.json

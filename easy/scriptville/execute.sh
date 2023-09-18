@@ -7,4 +7,4 @@ if [ ! -d "src" ]; then
   exit 0
 fi
 
-mkdir -p dist && for file in src/*.jpg; do mogrify -path dist -resize 400% "$file"; done
+mkdir -p out && for file in src/*.jpg; do mogrify -path out -resize 400% "$file"; done
