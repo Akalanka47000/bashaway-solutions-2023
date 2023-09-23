@@ -1,0 +1,83 @@
+version: '3'
+networks:
+  bashaway-2k23:
+    external: true
+services:
+  orchestrator:
+    image: ghcr.io/akalanka47000/pharmaceutical-orchestrator:dd2657a68e316a53d29cc6eaad896ca90c99804c-1
+    ports:
+      - '2002:8080'
+    networks:
+      - bashaway-2k23
+    environment:
+      PORT: 8080
+      AUTH_SERVICE_BASE_URL: http://auth-service:8080
+      USER_SERVICE_BASE_URL: http://user-service:8080
+      EMAIL_SERVICE_BASE_URL: http://email-service:8080
+      SMS_SERVICE_BASE_URL: http://sms-service:8080
+      PRODUCT_SERVICE_BASE_URL: http://product-service:8080
+      PAYMENT_SERVICE_BASE_URL: http://payment-service:8080
+      ORDER_SERVICE_BASE_URL: http://order-service:8080
+      REVIEW_SERVICE_BASE_URL: http://review-service:8080
+      ADMIN_SERVICE_BASE_URL: http://admin-service:8080
+      REPORT_SERVICE_BASE_URL: http://report-service:8080
+      SUPPORT_SERVICE_BASE_URL: http://support-service:8080
+      REDIS_CONNECTION_STRING: redis://:123456@redis:6379
+  auth-service:
+    image: ghcr.io/akalanka47000/pharmaceutical-auth-service:3e8749f240308773af4b0508a9245f9dd91c2ecd-1
+    networks:
+      - bashaway-2k23 
+    environment:
+      PORT: 8080
+      JWT_SECRET: 23423f4
+      USER_SERVICE_BASE_URL: http://user-service:8080
+      EMAIL_SERVICE_BASE_URL: http://user-service:8080
+      FRONTEND_BASE_URL: http://frontend:80
+      REDIS_CONNECTION_STRING: redis://:123456@redis:6379
+  user-service:
+    image: ghcr.io/akalanka47000/pharmaceutical-user-service:3e8749f240308773af4b0508a9245f9dd91c2ecd-1
+    networks:
+      - bashaway-2k23 
+    environment:
+      PORT: 8080
+      DB_URL: mongodb://mongo:27017/bashaway-2k23
+      EMAIL_SERVICE_BASE_URL: http://email-service:8080
+      FRONTEND_BASE_URL: http://frontend:80
+  email-service:
+    image: ghcr.io/akalanka47000/pharmaceutical-email-service:3e8749f240308773af4b0508a9245f9dd91c2ecd-1
+    networks:
+      - bashaway-2k23 
+    environment:
+      PORT: 8080
+      MAIL_HOST: smtp.gmail.com
+      MAIL_USER: a@gmail.com
+      MAIL_PASSWORD: 123dsafsdf
+  sms-service:
+    image: ghcr.io/akalanka47000/pharmaceutical-sms-service:3e8749f240308773af4b0508a9245f9dd91c2ecd-1
+    networks:
+      - bashaway-2k23 
+    environment:
+      PORT: 8080
+      TWILIO_ACCOUNT_SID: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      TWILIO_AUTH_TOKEN: your_auth_token
+      SMS_FROM: 940762345456
+  product-service:
+    image: ghcr.io/akalanka47000/pharmaceutical-product-service:3e8749f240308773af4b0508a9245f9dd91c2ecd-1
+    networks:
+      - bashaway-2k23 
+    environment:
+      PORT: 8080
+      DB_URL: mongodb://mongo:27017/bashaway-2k23
+      COMMISSION_PERCENTAGE: '5'
+  redis:
+    image: redis
+    command: >
+          --requirepass 123456
+    networks:
+      - bashaway-2k23
+  mongo:
+    image: mongo
+    restart: always
+    networks:
+      - bashaway-2k23
+    
